@@ -1,0 +1,132 @@
+/* welcome.css */
+
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
+
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Jersey 10', sans-serif;
+    background-color: #91C8E4;
+    color: white;
+    overflow: hidden; /* Mencegah scroll */
+}
+
+/* Kontainer utama untuk menampung semua elemen */
+.sky-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.top-welcome {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    color: #6a0dad;
+    z-index: 20; /* Pastikan selalu di atas */
+}
+
+/* Kontainer untuk teks utama di tengah */
+.main-content {
+    z-index: 10;
+    position: relative;
+}
+
+.main-content h1 {
+    font-size: clamp(40px, 8vw, 120px); /* Ukuran font responsif */
+    text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+    margin: 0;
+    line-height: 1.1;
+}
+
+.subtitle {
+    display: block;
+    color: #39FF14; /* Warna hijau neon */
+    text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+.next-link {
+    font-size: clamp(30px, 6vw, 90px);
+    color: white;
+    text-decoration: none;
+    text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    margin-top: 1rem;
+    transition: transform 0.2s ease-in-out;
+}
+
+.next-link:hover {
+    transform: scale(1.1);
+}
+
+/* Gambar kota di bagian bawah */
+.city-background {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 5;
+    line-height: 0;
+}
+
+.city-background img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Pengaturan Animasi Awan */
+.clouds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.cloud {
+    position: absolute;
+    animation: move-clouds linear infinite;
+    opacity: 0.9;
+}
+
+/* Variasi awan untuk efek dinamis */
+.cloud1 {
+    width: 200px;
+    top: 15%;
+    animation-duration: 70s;
+    left: -200px;
+}
+
+.cloud2 {
+    width: 150px;
+    top: 30%;
+    animation-duration: 50s;
+    animation-delay: -5s;
+    left: -150px;
+}
+
+.cloud3 {
+    width: 250px;
+    top: 10%;
+    animation-duration: 90s;
+    animation-delay: -20s;
+    left: -250px;
+}
+
+/* Animasi pergerakan awan */
+@keyframes move-clouds {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(100vw + 100%));
+    }
+}

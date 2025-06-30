@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Analisis - Metadata Cleaner</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+    
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Jersey 10', sans-serif;
+            background-color: #91C8E4; 
+            overflow: hidden;
+        }
+
+        .page-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; 
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #FFFBDE;
+            text-decoration: none;
+            z-index: 20;
+        }
+        
+        /* === PERBAIKAN: Animasi Pop-up untuk Taman === */
+        .foreground-scenery {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 5;
+            pointer-events: none;
+            line-height: 0;
+            
+            /* Animasi dimulai dari transparan dan posisi sedikit di bawah */
+            opacity: 0;
+            transform: translateY(20%);
+            animation: slide-up-scenery 1s ease-out 0.3s forwards;
+        }
+        .foreground-scenery img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* === PERBAIKAN: Posisi Kotak Hasil & Animasi Pop-up === */
+        .result-container {
+            position: absolute;
+            top: 40%; /* Posisi digeser ke atas */
+            left: 50%;
+            transform: translate(-50%, -50%); /* Trik centering */
+            
+            background-color: #FFFBDE;
+            border-radius: 25px;
+            border: 3px dashed #aed8ea;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            color: #3a3a3a;
+            width: 80%;
+            max-width: 600px;
+            max-height: 70vh;
+            display: flex;
+            flex-direction: column;
+
+            /* Animasi dimulai dari transparan dan ukuran kecil */
+            opacity: 0;
+            animation: scale-up-box 0.7s ease-out 0.8s forwards;
+        }
+
+        .result-container h1 {
+            font-size: 2.5em;
+            color: #00A9FF;
+            margin: 0 0 1rem 0;
+            text-shadow: 3px 3px 0px #b0eaff;
+        }
+
+        .result-content {
+            display: flex;
+            width: 100%;
+            gap: 1.5rem;
+        }
+
+        .metadata-section {
+            flex: 1;
+            text-align: left;
+            overflow-y: auto;
+            padding-right: 1rem;
+            border-right: 2px solid #aed8ea;
+        }
+
+        .metadata-section p {
+            font-size: 1.2em;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .metadata-section ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9em;
+        }
+        .metadata-section li {
+            margin-bottom: 0.3rem;
+            word-wrap: break-word;
+        }
+
+        .preview-section {
+            flex-basis: 200px;
+            text-align: center;
+        }
+        .preview-section h2 {
+            font-size: 1.3em;
+            color: #3a3a3a;
+            margin: 0 0 0.7rem 0;
+        }
+
+        .cleaned-img {
+            max-width: 100%;
+            border: 3px solid #aed8ea;
+            border-radius: 10px;
+        }
+
+        .download-button {
+            font-family: 'Jersey 10', sans-serif;
+            font-size: 1.5em;
+            background-color: #CDF5FD;
+            border: 3px solid #00A9FF;
+            color: #00A9FF;
+            padding: 5px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px #00A9FF;
+            transition: all 0.1s ease-in-out;
+            margin-top: 0.8rem;
+            text-decoration: none;
+        }
+        .download-button:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #00A9FF;
+        }
+
+        .clouds {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+        }
+        .cloud {
+            position: absolute;
+            animation: move-clouds linear infinite;
+            opacity: 0.9;
+        }
+        .cloud1 { width: 300px; top: 15%; animation-duration: 70s; right: 50px; }
+        .cloud2 { width: 400px; top: 30%; animation-duration: 50s; animation-delay: -5s; left: -150px; }
+
+        @keyframes move-clouds {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100vw); }
+        }
+
+        /* === KEYFRAMES BARU UNTUK ANIMASI POP-UP === */
+        @keyframes slide-up-scenery {
+            from { transform: translateY(20%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes scale-up-box {
+            /* Transform di 'from' dan 'to' harus sama agar posisi akhir tidak bergeser */
+            from { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <a href="{{ url_for('cleaned') }}" class="back-link">&larr; back</a>
+        
+        <div class="clouds">
+            <img src="{{ url_for('static', filename='image/cloud.png') }}" alt="Awan" class="cloud cloud1">
+            <img src="{{ url_for('static', filename='image/cloud.png') }}" alt="Awan" class="cloud cloud2">
+        </div>
+
+        <div class="result-container">
+            <h1>analyze Result</h1>
+            <div class="result-content">
+                <div class="metadata-section">
+                    <p>File: <strong>{{ original_filename }}</strong></p>
+                    {% if has_metadata %}
+                        <p>✅ EXIF metadata found ({{ metadata|length }} entri):</p>
+                        <ul>
+                            {% for key, value in metadata.items() %}
+                                <li><strong>{{ key }}:</strong> {{ value }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>🚫 no EXIF metadata was found</p>
+                    {% endif %}
+                </div>
+                <div class="preview-section">
+                    <h2>Clean Image:</h2>
+                    <img class="cleaned-img" src="{{ url_for('static', filename='cleaned/' + clean_filename) }}" alt="Cleaned Image">
+                    <br>
+                    <a class="download-button" href="{{ url_for('download', filename=clean_filename) }}">⬇️ Download</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="foreground-scenery">
+            <img src="{{ url_for('static', filename='image/taman.png') }}" alt="Pemandangan taman">
+        </div>
+    </div>
+</body>
+</html>
